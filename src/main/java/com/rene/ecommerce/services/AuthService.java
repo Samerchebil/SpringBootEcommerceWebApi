@@ -37,19 +37,17 @@ public class AuthService {
 			Client cli = clientRepository.findByEmail(email);
 			String newPassword = newPassword();
 			cli.setPassword(pe.encode(newPassword));
-			clientRepository.save(cli);
+	//		clientRepository.save(cli);
 			threadSendEmail(cli.getEmail(), newPassword);
 
 		} catch (NullPointerException e) {
 			Seller sel = sellerRepository.findByEmail(email);
-
 			if (sel == null) {
 				throw new ObjectNotFoundException();
 			}
-
 			String newPassword = newPassword();
 			sel.setPassword(pe.encode(newPassword));
-			sellerRepository.save(sel);
+	//		sellerRepository.save(sel);
 			threadSendEmail(sel.getEmail(), newPassword);
 
 		}
@@ -60,8 +58,7 @@ public class AuthService {
 		Thread threadEmail = new Thread() {
 			public void run() {
 				emailService.sendNewPassword(email, newPassword);
-
-			}
+						}
 		};
 		threadEmail.start();
 	}
@@ -72,7 +69,10 @@ public class AuthService {
 			return new TypeDTO("Client");
 		} else if(UserService.sellerAuthenticated() != null) {
 			return new TypeDTO("Seller");
-		}else {
+		}else if (UserService.adminAuthenticated() != null) {
+			return new TypeDTO("Admin");
+		}
+		else {
 			throw new ObjectNotFoundException();
 		}
 

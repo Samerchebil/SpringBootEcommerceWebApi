@@ -1,5 +1,6 @@
 package com.rene.ecommerce.services;
 
+import com.rene.ecommerce.security.AdminSS;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,12 @@ public class UserService {
 		}
 	}
 
+	public static AdminSS adminAuthenticated() {
+		try {
+			return (AdminSS) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 }

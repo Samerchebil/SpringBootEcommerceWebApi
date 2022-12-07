@@ -27,7 +27,7 @@ public class Seller extends User {
 			inverseJoinColumns = @JoinColumn(name = "roleName"))
 	private Set<Role> roles = new HashSet<>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Role.class)
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -45,9 +45,9 @@ public class Seller extends User {
 	private Double howMuchMoneyThisSellerHasSold;
 
 	@Override
-	@Column(name = "sellerId")
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "sellerId",unique = true)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer getId() {
 		// TODO Auto-generated method stub
 		return super.getId();

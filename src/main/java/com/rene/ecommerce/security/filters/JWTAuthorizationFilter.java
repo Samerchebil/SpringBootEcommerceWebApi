@@ -13,8 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
 import com.rene.ecommerce.security.JWTUtil;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -37,8 +38,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 		}
 
 		String header = request.getHeader("Authorization");
-		
-		
+		String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+
 		if(header != null && header.startsWith("Bearer ")) {
 			
 			UsernamePasswordAuthenticationToken auth = getAuthentication(header.substring(7), request);

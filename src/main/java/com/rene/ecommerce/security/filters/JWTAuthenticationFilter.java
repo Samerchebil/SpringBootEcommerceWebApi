@@ -1,20 +1,19 @@
 package com.rene.ecommerce.security.filters;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.rene.ecommerce.security.AdminSS;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -60,15 +59,22 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			Authentication auth) throws IOException, ServletException {
 
 		String username = "";
+		Collection<? extends GrantedAuthority> authorities ;
 
 		try {
 			username = ((ClientSS) auth.getPrincipal()).getUsername();
+			authorities = ((ClientSS) auth.getPrincipal()).getAuthorities();
 
 		} catch (ClassCastException e) {
-			username = ((SellerSS) auth.getPrincipal()).getUsername();
+			try{
+				username = ((SellerSS) auth.getPrincipal()).getUsername();
+				authorities = ((SellerSS) auth.getPrincipal()).getAuthorities();
+			} catch (ClassCastException e2) {
+				username = ((AdminSS) auth.getPrincipal()).getUsername();
+				authorities = ((AdminSS) auth.getPrincipal()).getAuthorities();			}
 		}
 
-		String token = jwtUtil.generateToken(username);
+		String token = jwtUtil.generateToken(username,authorities);
 		String refresh_token =jwtUtil.generateRefreshToken(username);
 		res.addHeader("Authorization", "Bearer " + token);
 		res.addHeader("refresh_token", "Bearer " + refresh_token);
@@ -89,6 +95,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		@Override
 		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
+			logger.error("Authentication failed: " + exception.getMessage());
 			response.setStatus(401);
 			response.setContentType("application/json");
 			response.getWriter().append(json());
@@ -100,5 +107,4 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 					+ "\"message\": \"Email or password incorrects\", " + "\"path\": \"/login\"}";
 		}
 	}
-
 }

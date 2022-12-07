@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public abstract class UserSS implements UserDetails {
 
-	
-	
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String email;
@@ -75,6 +73,10 @@ public abstract class UserSS implements UserDetails {
 
 	}
 
+	public void setAuthoritiesB(List<SimpleGrantedAuthority> profiles) {
+		this.authorities =profiles;
+
+	}
 
 	@Override
 	public String getPassword() {

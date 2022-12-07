@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rene.ecommerce.domain.Order;
 import com.rene.ecommerce.domain.Product;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "TB_CLIENTS")
@@ -37,7 +38,8 @@ public class Client extends User {
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Role.class)
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
+	//@Cascade({CascadeType.ALL})
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -49,8 +51,8 @@ public class Client extends User {
 
 	@Override
 	@Id
-	@Column(name = "client_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "client_id", unique = true)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer getId() {
 		// TODO Auto-generated method stub
 		return super.getId();
@@ -154,10 +156,4 @@ public class Client extends User {
 	public void addSpentMoneyWhenClientBuyAProduct(Double productPrice) {
 		this.howMuchMoneyThisClientHasSpent += productPrice;
 	}
-			
-
-	
-	
-	
-
 }

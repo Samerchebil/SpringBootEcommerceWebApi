@@ -41,7 +41,6 @@ public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
 	private String name;
 	private Double price;
 	private String description;
@@ -150,11 +149,9 @@ public class Product implements Serializable {
 	}
 
 	public static boolean isSold(Product obj) {
-
 		if (obj.getBuyerOfTheProduct() != null) {
-			
 			return true;
-		}
+	                             	}
 		return false;
 	}
 

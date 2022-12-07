@@ -13,7 +13,6 @@ public class SmtpEmailService extends AbstractEmailService {
 
 	@Autowired
 	private MailSender mailSender;
-	
 
 	@Autowired
 	private JavaMailSender javaMailSender;

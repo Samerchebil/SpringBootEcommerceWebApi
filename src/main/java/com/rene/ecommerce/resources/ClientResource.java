@@ -4,14 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.rene.ecommerce.domain.dto.ranking.ClientRankingDTO;
 import com.rene.ecommerce.domain.dto.updated.UpdatedClient;
@@ -66,20 +59,33 @@ public class ClientResource {
 		return ResponseEntity.ok().body(cli);
 	}
 
+	@PutMapping("/update/client/{id}")
+	@ApiOperation(value = "Update a client by id")
+	public ResponseEntity<Client> updateById(@RequestBody UpdatedClient obj, @PathVariable Integer id){
+
+		Client cli =  service.updateById(id,obj);
+		return ResponseEntity.ok().body(cli);
+	}
+
 	@DeleteMapping("/delete/client")
 	@ApiOperation(value = "Delete a client")
 	public ResponseEntity<Void> delete() {
 		service.delete();
-
 		return ResponseEntity.noContent().build();
 	}
-	
+
+	@DeleteMapping("/delete/client/{id}")
+	@ApiOperation(value = "Delete a client by id")
+	public ResponseEntity<Void> deleteById(@RequestParam Integer id) {
+		service.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
+
 
 	@ApiOperation(value = "Return a list of clients who buys the most")
 	@GetMapping("/clients/ranking")
-	public ResponseEntity<List<ClientRankingDTO>> returnRankingClient() {
-		
-		
+	public ResponseEntity<List<ClientRankingDTO>> returnRankingClient()
+	{
 		return ResponseEntity.ok().body(ranking.returnRankingClient());
 	}
 }

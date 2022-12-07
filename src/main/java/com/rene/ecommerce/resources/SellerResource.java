@@ -2,16 +2,11 @@ package com.rene.ecommerce.resources;
 
 import java.util.List;
 
+import com.rene.ecommerce.domain.dto.updated.UpdatedClient;
+import com.rene.ecommerce.domain.users.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.rene.ecommerce.domain.dto.ranking.SellerRankingDTO;
 import com.rene.ecommerce.domain.dto.updated.UpdatedSeller;
@@ -66,11 +61,25 @@ public class SellerResource {
 		return ResponseEntity.ok().body(sel);
 	}
 
+	@PutMapping("/update/seller/{id}")
+	@ApiOperation(value = "Update a seller by id")
+	public ResponseEntity<Seller> updateById(@RequestBody UpdatedSeller obj, @PathVariable Integer id){
+		Seller cli =  service.updateById(id,obj);
+		return ResponseEntity.ok().body(cli);
+	}
+
 	@ApiOperation(value = "Delete a seller")
 	@DeleteMapping("/delete/seller")
 	public ResponseEntity<Void> delete() {
 		service.delete();
 
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/delete/seller/{id}")
+	@ApiOperation(value = "Delete a seller by id")
+	public ResponseEntity<Void> deleteById(@RequestParam Integer id) {
+		service.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -80,5 +89,7 @@ public class SellerResource {
 
 		return ResponseEntity.ok().body(ranking.returnRankingSeller());
 	}
+
+
 
 }
